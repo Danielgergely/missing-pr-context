@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 
-from pydantic import BaseModel
 import datetime
 
 
@@ -12,7 +11,7 @@ class User:
 
 
 @dataclass
-class Message(BaseModel):
+class Message:
     message: str
     reviewer: User
     timestamp: datetime.datetime

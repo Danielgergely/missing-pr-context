@@ -1,12 +1,22 @@
 from models import PatchSet
-from mapper import UserMapper, ApprovalMapper
+from mapper._approval import ApprovalMapper
+from models import User
+
+
+class UserMapper:
+
+    @staticmethod
+    def dict_to_model(_dict: dict) -> User:
+        return User(email=_dict.get("email"),
+                    name=_dict.get("name"),
+                    username=_dict.get("username"))
 
 
 class PatchSetMapper:
 
     @staticmethod
     def dict_to_model(_dict: dict) -> PatchSet:
-        return PatchSet(approvals=[ApprovalMapper.dict_to_model(approval) for approval in _dict.get("approvals")],
+        return PatchSet(approvals=[ApprovalMapper.dict_to_model(approval) for approval in _dict.get("approvals", [])],
                         author=UserMapper.dict_to_model(_dict=_dict.get("author")),
                         createdOn=_dict.get("createdOn"),
                         kind=_dict.get("kind"),

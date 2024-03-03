@@ -13,7 +13,7 @@ class User:
 
 @dataclass
 class PatchSet:
-    approvals: [Approval]
+    approvals: [Approval | None]
     author: User
     createdOn: datetime.datetime
     kind: str
