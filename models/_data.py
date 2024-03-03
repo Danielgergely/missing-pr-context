@@ -22,7 +22,7 @@ class Data:
     number: int
     open: bool
     owner: User
-    patchSets: [PatchSet]
+    patchSets: [PatchSet | None]
     project: str
     status: str
     subject: str
