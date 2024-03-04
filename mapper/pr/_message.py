@@ -1,5 +1,4 @@
-from models import Message
-from models import User
+from models.pr import Message, User
 from datetime import datetime
 
 

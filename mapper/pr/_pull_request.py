@@ -1,5 +1,5 @@
-from models import PullRequest
-from mapper import DataMapper, SearchFieldsMapper
+from models.pr import PullRequest
+from mapper.pr import DataMapper, SearchFieldsMapper
 from datetime import datetime
 
 

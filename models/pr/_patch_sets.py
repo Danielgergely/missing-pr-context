@@ -1,7 +1,7 @@
 import datetime
 from dataclasses import dataclass
 
-from models._approval import Approval
+from models.pr._approval import Approval
 
 
 @dataclass
