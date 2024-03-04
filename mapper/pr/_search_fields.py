@@ -1,4 +1,4 @@
-from models import SearchFields
+from models.pr import SearchFields
 
 
 class SearchFieldsMapper:

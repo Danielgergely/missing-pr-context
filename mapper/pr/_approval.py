@@ -1,5 +1,4 @@
-from models import Approval
-from models import User
+from models.pr import User, Approval
 from datetime import datetime
 
 

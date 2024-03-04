@@ -2,7 +2,7 @@ import datetime
 
 from dataclasses import dataclass
 
-from models import Data, SearchFields
+from models.pr import Data, SearchFields
 
 
 @dataclass

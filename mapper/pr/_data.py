@@ -1,6 +1,5 @@
-from models import Data
-from mapper import MessageMapper, PatchSetMapper
-from models import User
+from models.pr import Data, User
+from mapper.pr import MessageMapper, PatchSetMapper
 from datetime import datetime
 
 

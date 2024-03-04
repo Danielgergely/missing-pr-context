@@ -1,7 +1,7 @@
 import datetime
 from dataclasses import dataclass
 
-from models import Message, PatchSet
+from models.pr import Message, PatchSet
 
 
 @dataclass
