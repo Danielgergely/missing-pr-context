@@ -1,6 +1,5 @@
-from models import PatchSet
+from models.pr import PatchSet, User
 from mapper.pr._approval import ApprovalMapper
-from models import User
 from datetime import datetime
 
 
