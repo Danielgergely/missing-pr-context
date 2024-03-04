@@ -1,6 +1,7 @@
 from models import Data
 from mapper import MessageMapper, PatchSetMapper
 from models import User
+from datetime import datetime
 
 
 class UserMapper:
@@ -19,9 +20,9 @@ class DataMapper:
         return Data(branch=_dict.get("branch"),
                     comments=[MessageMapper.dict_to_model(message) for message in _dict.get("comments")],
                     commitMessage=_dict.get("commitMessage"),
-                    createdOn=_dict.get("createdOn"),
+                    createdOn=datetime.fromtimestamp(_dict.get("createdOn")),
                     id=_dict.get("id"),
-                    lastUpdated=_dict.get("lastUpdated"),
+                    lastUpdated=datetime.fromtimestamp(_dict.get("lastUpdated")),
                     number=_dict.get("number"),
                     open=_dict.get("open"),
                     owner=UserMapper.dict_to_model(_dict=_dict.get("owner")),

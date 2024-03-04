@@ -1,5 +1,6 @@
 from models import Message
 from models import User
+from datetime import datetime
 
 
 class UserMapper:
@@ -17,4 +18,4 @@ class MessageMapper:
     def dict_to_model(_dict: dict) -> Message:
         return Message(message=_dict.get("message"),
                        reviewer=UserMapper.dict_to_model(_dict=_dict.get("reviewer")),
-                       timestamp=_dict.get("timestamp"))
+                       timestamp=datetime.fromtimestamp(_dict.get("timestamp")))

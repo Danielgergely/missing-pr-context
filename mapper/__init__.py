@@ -4,4 +4,4 @@ from ._patch_sets import PatchSetMapper
 from ._message import MessageMapper
 from ._approval import ApprovalMapper
 from ._data import DataMapper
-from ._review import ReviewMapper
+from ._pull_request import PullRequestMapper
