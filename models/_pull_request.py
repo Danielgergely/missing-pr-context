@@ -6,7 +6,7 @@ from models import Data, SearchFields
 
 
 @dataclass
-class Review:
+class PullRequest:
     backend_name: str
     backend_version: str
     category: str
