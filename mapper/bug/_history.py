@@ -7,6 +7,6 @@ class HistoryMapper:
 
     @staticmethod
     def dict_to_model(_dict: dict) -> History:
-        return History(author=UserMapper.dict_to_model(_dict.get("author")),
+        return History(author=UserMapper.dict_to_model(_dict.get("author")) if _dict.get("author") is not None else None,
                        created=datetime.strptime(_dict.get("created"), "%Y-%m-%dT%H:%M:%S.%f%z"),
                        items=[ItemMapper.dict_to_model(_dict=item) for item in _dict.get("items")])

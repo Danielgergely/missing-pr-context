@@ -21,9 +21,9 @@ class Fields:
     labels: []
     timeestimate: str | None
     aggregatetimeoriginalestimate: str | None
-    versions: [Version]
+    versions: [Version | None]
     issuelinks: []
-    assignee: User
+    assignee: User | None
     updated: datetime
     status: Status
     components: [Component]
@@ -31,9 +31,9 @@ class Fields:
     description: str
     aggregatetimeestimate: str | None
     summary: str
-    creator: User
+    creator: User | None
     subtasks: []
-    reporter: User
+    reporter: User | None
     aggregateprogress: dict
     environment: str | None
     progress: dict

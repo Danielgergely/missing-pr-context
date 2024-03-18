@@ -6,6 +6,6 @@ from models.bug import User, Item
 
 @dataclass
 class History:
-    author: User
+    author: User | None
     created: datetime
     items: [Item]
