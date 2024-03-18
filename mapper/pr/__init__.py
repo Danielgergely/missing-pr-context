@@ -5,3 +5,4 @@ from ._patch_sets import PatchSetMapper
 from ._search_fields import SearchFieldsMapper
 from ._data import DataMapper
 from ._pull_request import PullRequestMapper
+from ._pr_light import PullRequestLightMapper
