@@ -2,7 +2,16 @@ import datetime
 from dataclasses import dataclass
 
 from models.bug import User
-from models.pr import PatchSet
+
+from enum import Enum
+
+
+class PRStatus(Enum):
+    ABANDONED = "ABANDONED"
+    DEFERRED = "DEFERRED"
+    INTEGRATING = "INTEGRATING"
+    MERGED = "MERGED"
+    NEW = "NEW"
 
 
 @dataclass
@@ -17,7 +26,7 @@ class PullRequestLight:
     open: bool
     owner: User
     project: str
-    status: str
+    status: PRStatus
     subject: str
     processingTime: int | None  # in hours
     approvedBy: User | None
@@ -27,4 +36,4 @@ class PullRequestLight:
     bugId: str | None
     bugDescription: str | None
     bugDescriptionLineCount: int | None
-
+    iterationCount: int

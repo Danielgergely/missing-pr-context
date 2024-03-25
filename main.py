@@ -5,7 +5,9 @@ from service import service_provider
 if __name__ == '__main__':
     f_reader = service_provider.file_reader()
 
-    if f_reader.file_exists("pr_data.pickle"):
+    new_load = True
+
+    if f_reader.file_exists("pr_data.pickle") and not new_load:
         pull_requests = f_reader.pickle_to_data("pr_data.pickle")
         a = 10
     else:
@@ -34,3 +36,8 @@ if __name__ == '__main__':
     # Eclipse
     # -> bug data is not exported completely. the data column only contains a small portion of the actual information
 
+
+    # Bug reopen -> transitions
+    # multiple PR for 1 bug
+    # iteration count-> patch sets number of commits after review
+    # List all PR statuses ✅
