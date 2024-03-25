@@ -18,4 +18,5 @@ class BugMapper:
                    category=_dict.get("category"),
                    search_fields=SearchFieldsMapper.dict_to_model(_dict=_dict.get("search_fields")),
                    tag=_dict.get("tag"),
-                   data=DataMapper.dict_to_model(_dict=_dict.get("data")))
+                   data=DataMapper.dict_to_model(_dict=_dict.get("data")),
+                   pull_requests=set())

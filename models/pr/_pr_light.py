@@ -37,3 +37,4 @@ class PullRequestLight:
     bugDescription: str | None
     bugDescriptionLineCount: int | None
     iterationCount: int
+    bugReopened: bool | None

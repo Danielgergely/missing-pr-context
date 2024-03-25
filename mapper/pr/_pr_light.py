@@ -33,7 +33,7 @@ class PullRequestLightMapper:
         match = re.search(bug_search_pattern, commit_search)
         if match:
             bug_linked = True
-            pr_bug_id = commit_search[match.end():match.end()+11]
+            pr_bug_id = commit_search[match.end():match.end() + 11]
             bug = None
             if pr_bug_id in bugIds:
                 for b in bugs:
@@ -41,16 +41,25 @@ class PullRequestLightMapper:
                         bug = b
                         break
             if bug is not None:
+                bug.pull_requests.add(data.get("number"))
                 bug_description = bug.data.fields.description
-                bug_description_line_count = bug.data.fields.description.count("\n")  # might need to use word count
+                try:
+                    bug_description_line_count = bug.data.fields.description.count("\n")  # might need to use word count
+                except Exception as e:
+                    print(pr_bug_id)
+                    print(e)
+                    bug_description_line_count = 0
+                bug_reopened = False
             else:
                 bug_description = None
-                bug_description_line_count = None
+                bug_description_line_count = 0
+                bug_reopened = False
         else:
             bug_linked = False
             pr_bug_id = None
             bug_description = None
             bug_description_line_count = None
+            bug_reopened = None
         return PullRequestLight(category=_dict.get("category"),
                                 timestamp=datetime.fromtimestamp(_dict.get("timestamp")),
                                 updated_on=datetime.fromtimestamp(_dict.get("updated_on")),
@@ -71,4 +80,5 @@ class PullRequestLightMapper:
                                 bugId=pr_bug_id,
                                 bugDescription=bug_description,
                                 bugDescriptionLineCount=bug_description_line_count,
-                                iterationCount=1)
+                                iterationCount=len(patchSets),
+                                bugReopened=bug_reopened)
