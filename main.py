@@ -34,8 +34,8 @@ def read_pr_data(pr_data_file_path: str, pr_data_pickle_path: str, bugs: [Bug], 
 
 
 if __name__ == '__main__':
-    bug_full_load = True
-    pr_full_load = True
+    bug_full_load = False
+    pr_full_load = False
 
     qt_bots = read_qt_bots(qt_bots_file_path="qt_bots.txt")
 
@@ -51,6 +51,10 @@ if __name__ == '__main__':
                                  qt_bots=qt_bots,
                                  full_load=pr_full_load)
 
+    if pr_full_load:  # save bugs again if prs are loaded -> pr numbers added to bugs
+        f_reader = service_provider.file_reader()
+        f_reader.data_to_pickle("qt_bugs.pickle", bugs)
+
     a = 10
 
     # QT
@@ -61,7 +65,9 @@ if __name__ == '__main__':
     # Eclipse
     # -> bug data is not exported completely. the data column only contains a small portion of the actual information
 
-    # Bug reopen -> transitions
-    # multiple PR for 1 bug
-    # iteration count-> patch sets number of commits after review
+    # Bug reopen -> transitions ❌
+        ## bug data does not contain transition data. Transitions is always an empty list -> 'QTBUG-23917'
+    # multiple PR for 1 bug ✅
+    # iteration count-> patch sets number of commits after review ✅
+        ## https://codereview.qt-project.org/c/qt/qtbase/+/311411 -> 104 iterationCount = 4
     # List all PR statuses ✅

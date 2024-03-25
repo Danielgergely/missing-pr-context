@@ -18,3 +18,4 @@ class Bug:
     search_fields: SearchFields
     tag: str
     data: Data
+    pull_requests: set
