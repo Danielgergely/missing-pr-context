@@ -4,7 +4,7 @@ from datetime import datetime
 from mapper.bug import UserMapper
 from mapper.pr import PatchSetMapper
 from models.bug import Bug
-from models.pr import PullRequestLight
+from models.pr import PullRequestLight, PRStatus
 
 
 class PullRequestLightMapper:
@@ -61,7 +61,7 @@ class PullRequestLightMapper:
                                 open=data.get("open"),
                                 owner=UserMapper.dict_to_model(data.get("owner")),
                                 project=data.get("project"),
-                                status=data.get("status"),
+                                status=PRStatus(data.get("status")),
                                 subject=data.get("subject"),
                                 processingTime=processing_time,
                                 approvedBy=approved_by,
@@ -70,4 +70,5 @@ class PullRequestLightMapper:
                                 bugLinked=bug_linked,
                                 bugId=pr_bug_id,
                                 bugDescription=bug_description,
-                                bugDescriptionLineCount=bug_description_line_count)
+                                bugDescriptionLineCount=bug_description_line_count,
+                                iterationCount=1)
