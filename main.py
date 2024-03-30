@@ -70,4 +70,6 @@ if __name__ == '__main__':
     # multiple PR for 1 bug ✅
     # iteration count-> patch sets number of commits after review ✅
         ## https://codereview.qt-project.org/c/qt/qtbase/+/311411 -> 104 iterationCount = 4
+        ## user revision hash -> unique number of hashes
     # List all PR statuses ✅
+    # useful statistics -> % of pr to bugs -> iteration < 3 > 3 -> time + 2 day -2 days
