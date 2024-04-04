@@ -1,7 +1,9 @@
 from mapper.bug import BugMapper
 from mapper.pr import PullRequestLightMapper
 from models.bug import Bug
+from models.pr import PullRequestLight
 from service import service_provider
+from statistics import PRStatistics
 
 
 def read_qt_bots(qt_bots_file_path: str):
@@ -33,6 +35,11 @@ def read_pr_data(pr_data_file_path: str, pr_data_pickle_path: str, bugs: [Bug], 
         return pull_requests
 
 
+def calculate_statistics(pull_requests: [PullRequestLight], bugs: [Bug], bugIds: [str]):
+    pr_statistics = PRStatistics(pull_requests=pull_requests, bugs=bugs, bug_ids=bugIds)
+    print(f"% of Pull Request with linked bugs: {pr_statistics.percentage_of_prs_with_bugs():.2f}%")
+
+
 if __name__ == '__main__':
     bug_full_load = False
     pr_full_load = False
@@ -55,6 +62,8 @@ if __name__ == '__main__':
         f_reader = service_provider.file_reader()
         f_reader.data_to_pickle("qt_bugs.pickle", bugs)
 
+    calculate_statistics(pull_requests=pull_requests, bugs=bugs, bugIds=bugIds)
+
     a = 10
 
     # QT
@@ -66,10 +75,10 @@ if __name__ == '__main__':
     # -> bug data is not exported completely. the data column only contains a small portion of the actual information
 
     # Bug reopen -> transitions ❌
-        ## bug data does not contain transition data. Transitions is always an empty list -> 'QTBUG-23917'
+    ## bug data does not contain transition data. Transitions is always an empty list -> 'QTBUG-23917'
     # multiple PR for 1 bug ✅
     # iteration count-> patch sets number of commits after review ✅
-        ## https://codereview.qt-project.org/c/qt/qtbase/+/311411 -> 104 iterationCount = 4
-        ## user revision hash -> unique number of hashes
+    ## https://codereview.qt-project.org/c/qt/qtbase/+/311411 -> 104 iterationCount = 4
+    ## user revision hash -> unique number of hashes
     # List all PR statuses ✅
-    # useful statistics -> % of pr to bugs -> iteration < 3 > 3 -> time + 2 day -2 days
+    # useful statistics -> % of pr to bugs -> iteration < 3 > 3 ✅ -> time + 2 day -2 days ✅
