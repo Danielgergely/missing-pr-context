@@ -1,6 +1,6 @@
 from mapper.bug import BugMapper
 from mapper.pr import PullRequestLightMapper
-from models.bug import Bug
+import pandas as pd
 from models.pr import PullRequestLight
 from service import service_provider
 from statistics import PRStatistics
@@ -18,26 +18,30 @@ def read_bug_data(bug_data_file_path: str, bug_data_pickle_path: str, full_load:
     else:
         bug_data = f_reader.read_json(bug_data_file_path)
         bugs = [BugMapper.dict_to_model(bug) for bug in bug_data]
-        f_reader.data_to_pickle(bug_data_pickle_path, bugs)
-        return bugs
+        bug_dict = {bug.search_fields.issue_key: bug for bug in bugs}
+        f_reader.data_to_pickle(bug_data_pickle_path, bug_dict)
+        return bug_dict
 
 
-def read_pr_data(pr_data_file_path: str, pr_data_pickle_path: str, bugs: [Bug], bugIds: [str], qt_bots: [str],
+def read_pr_data(pr_data_file_path: str, pr_data_pickle_path: str, bugs: dict, qt_bots: [str],
                  full_load: bool = True):
     f_reader = service_provider.file_reader()
     if f_reader.file_exists(pr_data_pickle_path) and not full_load:
         return f_reader.pickle_to_data(pr_data_pickle_path)
     else:
         pr_data = f_reader.read_json(pr_data_file_path)
-        pull_requests = [PullRequestLightMapper.dict_to_model(pr, bugIds=bugIds, bugs=bugs, bots=qt_bots) for pr in
+        pull_requests = [PullRequestLightMapper.dict_to_model(pr, bugs=bugs, bots=qt_bots) for pr in
                          pr_data]
         f_reader.data_to_pickle(pr_data_pickle_path, pull_requests)
         return pull_requests
 
 
-def calculate_statistics(pull_requests: [PullRequestLight], bugs: [Bug], bugIds: [str]):
-    pr_statistics = PRStatistics(pull_requests=pull_requests, bugs=bugs, bug_ids=bugIds)
+def calculate_statistics(pull_requests: [PullRequestLight]):
+    pr_statistics = PRStatistics(pull_requests=pull_requests)
     print(f"% of Pull Request with linked bugs: {pr_statistics.percentage_of_prs_with_bugs():.2f}%")
+    statistics = pr_statistics.calculate_statistics()
+    df = pd.DataFrame(statistics)
+    a = 10
 
 
 if __name__ == '__main__':
@@ -49,12 +53,10 @@ if __name__ == '__main__':
     bugs = read_bug_data(bug_data_file_path="0_jira_Qt_2021-09-21.json",
                          bug_data_pickle_path="qt_bugs.pickle",
                          full_load=bug_full_load)
-    bugIds = [bug.search_fields.issue_key for bug in bugs]
 
     pull_requests = read_pr_data(pr_data_file_path="qt_2017-01-01.json",
                                  pr_data_pickle_path="pr_data.pickle",
                                  bugs=bugs,
-                                 bugIds=bugIds,
                                  qt_bots=qt_bots,
                                  full_load=pr_full_load)
 
@@ -62,7 +64,7 @@ if __name__ == '__main__':
         f_reader = service_provider.file_reader()
         f_reader.data_to_pickle("qt_bugs.pickle", bugs)
 
-    calculate_statistics(pull_requests=pull_requests, bugs=bugs, bugIds=bugIds)
+    calculate_statistics(pull_requests=pull_requests)
 
     a = 10
 
@@ -82,3 +84,8 @@ if __name__ == '__main__':
     ## user revision hash -> unique number of hashes
     # List all PR statuses ✅
     # useful statistics -> % of pr to bugs ✅ -> iteration < 3 > 3 ✅ -> time + 2 day -2 days ✅
+
+
+    ## 2024.04.08
+    # Eclipse data -> csv ❔
+    # Bug reopen -> transitions ❔

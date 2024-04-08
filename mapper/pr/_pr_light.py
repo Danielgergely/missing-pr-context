@@ -3,14 +3,13 @@ from datetime import datetime
 
 from mapper.bug import UserMapper
 from mapper.pr import PatchSetMapper
-from models.bug import Bug
 from models.pr import PullRequestLight, PRStatus
 
 
 class PullRequestLightMapper:
 
     @staticmethod
-    def dict_to_model(_dict: dict, bugIds: [str], bugs: [Bug], bots: [str]) -> PullRequestLight:
+    def dict_to_model(_dict: dict, bugs: dict, bots: [str]) -> PullRequestLight:
         data = _dict.get("data")
         created_on = datetime.fromtimestamp(data.get("createdOn"))
         commit_message = data.get("commitMessage")
@@ -18,7 +17,7 @@ class PullRequestLightMapper:
         human_approvals = [approval for patchSet in patchSets for approval in patchSet.approvals
                            if approval.by.name not in bots and approval.value == "2"]
         if human_approvals:
-            latest_approval = max(human_approvals, key=lambda a: a.grantedOn)
+            latest_approval = max(human_approvals, key=lambda a: a.grantedOn, default=None)
             approved_by = latest_approval.by
             approved_time = latest_approval.grantedOn
             time_difference = approved_time - created_on
@@ -34,12 +33,7 @@ class PullRequestLightMapper:
         if match:
             bug_linked = True
             pr_bug_id = commit_search[match.end():match.end() + 11]
-            bug = None
-            if pr_bug_id in bugIds:
-                for b in bugs:
-                    if b.search_fields.issue_key == pr_bug_id:
-                        bug = b
-                        break
+            bug = bugs.get(pr_bug_id)
             if bug is not None:
                 bug.pull_requests.add(data.get("number"))
                 bug_description = bug.data.fields.description

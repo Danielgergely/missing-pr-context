@@ -3,14 +3,10 @@ from models.pr import PullRequestLight, PRStatus
 
 
 class PRStatistics:
-    _bugs: [Bug]
     _pull_requests: [PullRequestLight]
-    _bugIds: [str]
 
-    def __init__(self, pull_requests: [PullRequestLight], bugs: [Bug], bug_ids: [str]):
+    def __init__(self, pull_requests: [PullRequestLight]):
         self._pull_requests = pull_requests
-        self._bugs = bugs
-        self._bugIds = bug_ids
 
     #### Data set statistics ###
 
@@ -22,6 +18,8 @@ class PRStatistics:
 
     @staticmethod
     def review_time(pr: PullRequestLight) -> str:
+        if pr.processingTime is None:
+            return 'N/A'
         if pr.processingTime < (24 * 3):
             return '< 3 days'
         else:
@@ -37,8 +35,9 @@ class PRStatistics:
     @staticmethod
     def pr_category(pr: PullRequestLight, required_line_count: int = 2,
                     required_bug_description_line_count: int = 2) -> str:
+        bug_description_line_count = pr.bugDescriptionLineCount or 0
         match (pr.bugLinked, pr.commitLineCount >= required_line_count,
-               pr.bugDescriptionLineCount >= required_bug_description_line_count):
+               bug_description_line_count >= required_bug_description_line_count):
             case (False, False, _):  # 🔗❌ | 💬❌ | 🐞❌
                 return 'Insufficient context'
             case (False, True, _):  # 🔗❌ | 💬✅ | 🐞❌
@@ -57,3 +56,14 @@ class PRStatistics:
         else:
             return 'Not abandoned'
 
+    def calculate_statistics(self):
+        return [
+            {
+                'PR': pr.number,
+                'Review time': self.review_time(pr),
+                'Review iteration': self.review_iteration(pr),
+                'PR category': self.pr_category(pr),
+                'Abandoned PR': self.abandoned_pr(pr)
+            }
+            for pr in self._pull_requests
+        ]
