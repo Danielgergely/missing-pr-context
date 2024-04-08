@@ -93,3 +93,9 @@ if __name__ == '__main__':
     ## 2024.04.08
     # Eclipse data -> csv ❔
     # Bug reopen -> transitions ❔
+
+    # number of words + 30 -> dynamic
+    # review comments count
+    # bug id duplicated -> reopened
+    # normalize data before visualization
+    # come up with meaningful visualizations -> boxplots
