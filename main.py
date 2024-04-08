@@ -4,6 +4,7 @@ import pandas as pd
 from models.pr import PullRequestLight
 from service import service_provider
 from statistics import PRStatistics
+from visualizer import Visualizer
 
 
 def read_qt_bots(qt_bots_file_path: str):
@@ -40,8 +41,7 @@ def calculate_statistics(pull_requests: [PullRequestLight]):
     pr_statistics = PRStatistics(pull_requests=pull_requests)
     print(f"% of Pull Request with linked bugs: {pr_statistics.percentage_of_prs_with_bugs():.2f}%")
     statistics = pr_statistics.calculate_statistics()
-    df = pd.DataFrame(statistics)
-    a = 10
+    return pd.DataFrame(statistics)
 
 
 if __name__ == '__main__':
@@ -64,7 +64,12 @@ if __name__ == '__main__':
         f_reader = service_provider.file_reader()
         f_reader.data_to_pickle("qt_bugs.pickle", bugs)
 
-    calculate_statistics(pull_requests=pull_requests)
+    statistics = calculate_statistics(pull_requests=pull_requests)
+
+    visualizer = Visualizer(data=statistics)
+    visualizer.create_subplots(
+        x_values=[("Review time", "PR category"), ("Review iteration", "PR category"), ("Abandoned PR", "PR category")],
+        title="Pull Request statistics")
 
     a = 10
 
@@ -84,7 +89,6 @@ if __name__ == '__main__':
     ## user revision hash -> unique number of hashes
     # List all PR statuses ✅
     # useful statistics -> % of pr to bugs ✅ -> iteration < 3 > 3 ✅ -> time + 2 day -2 days ✅
-
 
     ## 2024.04.08
     # Eclipse data -> csv ❔
