@@ -81,4 +81,4 @@ if __name__ == '__main__':
     ## https://codereview.qt-project.org/c/qt/qtbase/+/311411 -> 104 iterationCount = 4
     ## user revision hash -> unique number of hashes
     # List all PR statuses ✅
-    # useful statistics -> % of pr to bugs -> iteration < 3 > 3 ✅ -> time + 2 day -2 days ✅
+    # useful statistics -> % of pr to bugs ✅ -> iteration < 3 > 3 ✅ -> time + 2 day -2 days ✅
