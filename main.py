@@ -44,6 +44,19 @@ def calculate_statistics(pull_requests: [PullRequestLight]):
     return pd.DataFrame(statistics)
 
 
+def visualize(data: pd.DataFrame, x_values: list,
+              title: str = "Pull Request statistics", barplot: bool = True):
+    visualizer = Visualizer(data=data)
+    if barplot:
+        visualizer.create_barplots(
+            x_values=x_values,
+            title=title)
+    else:
+        visualizer.create_boxplots(
+            x_values=x_values,
+            title=title)
+
+
 if __name__ == '__main__':
     bug_full_load = False
     pr_full_load = False
@@ -66,10 +79,11 @@ if __name__ == '__main__':
 
     statistics = calculate_statistics(pull_requests=pull_requests)
 
-    visualizer = Visualizer(data=statistics)
-    visualizer.create_barplots(
-        x_values=[("Review time", "PR category"), ("Review iteration", "PR category"), ("Abandoned PR", "PR category")],
-        title="Pull Request statistics")
+    visualize(data=statistics, x_values=[("Review time", "PR category"),
+                                         ("Review iteration", "PR category"),
+                                         ("Abandoned PR", "PR category"),
+                                         ("Comment count", "PR category")],
+              barplot=False)
 
     a = 10
 
@@ -97,5 +111,5 @@ if __name__ == '__main__':
     # number of words + 30 -> dynamic ✅
     # review comments count ✅
     # bug id duplicated -> reopened ❔
-    # normalize data before visualization
-    # come up with meaningful visualizations -> boxplots
+    # normalize data before visualization ❔-> is it necessary if concept is ok
+    # come up with meaningful visualizations -> boxplots -> concept created ✅

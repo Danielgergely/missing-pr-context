@@ -1,4 +1,3 @@
-from models.bug import Bug
 from models.pr import PullRequestLight, PRStatus
 
 
@@ -15,6 +14,23 @@ class PRStatistics:
         return prs_with_bugs / len(self._pull_requests) * 100
 
     ### PR statistics ###
+
+    @staticmethod
+    def comment_count(pr: PullRequestLight) -> str:
+        count = pr.commentCount
+        match count:
+            case 0:
+                return "0"
+            case _ if 1 <= count < 6:
+                return "1 - 5"
+            case _ if 6 <= count < 11:
+                return "6 - 10"
+            case _ if 11 <= count < 26:
+                return "11 - 25"
+            case _ if 26 <= count < 101:
+                return "26 - 100"
+            case _:
+                return "100+"
 
     @staticmethod
     def review_time(pr: PullRequestLight) -> str:
@@ -63,7 +79,8 @@ class PRStatistics:
                 'Review time': self.review_time(pr),
                 'Review iteration': self.review_iteration(pr),
                 'PR category': self.pr_category(pr, **kwargs),
-                'Abandoned PR': self.abandoned_pr(pr)
+                'Abandoned PR': self.abandoned_pr(pr),
+                'Comment count': self.comment_count(pr),
             }
             for pr in self._pull_requests
         ]
