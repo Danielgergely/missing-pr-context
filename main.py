@@ -113,3 +113,10 @@ if __name__ == '__main__':
     # bug id duplicated -> reopened ❔
     # normalize data before visualization ❔-> is it necessary if concept is ok
     # come up with meaningful visualizations -> boxplots -> concept created ✅
+
+    ## 2024.04.22
+    # Abandoned/not abandoned -> use barchart
+    # Implement new version according to concept
+    # Add y & x-axis titles
+    # Statistical methods
+    # Start preparing presentation -> !!answer all questions in email!!
