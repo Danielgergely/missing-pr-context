@@ -31,10 +31,10 @@ class PullRequestLight:
     processingTime: int | None  # in hours
     approvedBy: User | None
     approvedTime: datetime.datetime
-    commitLineCount: int
+    commitWordCount: int
     bugLinked: bool
     bugId: str | None
     bugDescription: str | None
-    bugDescriptionLineCount: int | None
+    bugDescriptionWordCount: int | None
     iterationCount: int
     bugReopened: bool | None

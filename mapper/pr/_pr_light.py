@@ -26,7 +26,7 @@ class PullRequestLightMapper:
             approved_by = None
             approved_time = None
             processing_time = None
-        commit_line_count = 1 + commit_message.count("\n")
+        commit_word_count = len(commit_message.split())
         bug_search_pattern = r"Task-number: "
         commit_search = commit_message.replace("\n", " ")
         match = re.search(bug_search_pattern, commit_search)
@@ -38,21 +38,21 @@ class PullRequestLightMapper:
                 bug.pull_requests.add(data.get("number"))
                 bug_description = bug.data.fields.description
                 try:
-                    bug_description_line_count = bug.data.fields.description.count("\n")  # might need to use word count
+                    bug_description_word_count = len(bug.data.fields.description.split())
                 except Exception as e:
                     print(pr_bug_id)
                     print(e)
-                    bug_description_line_count = 0
+                    bug_description_word_count = 0
                 bug_reopened = False
             else:
                 bug_description = None
-                bug_description_line_count = 0
+                bug_description_word_count = 0
                 bug_reopened = False
         else:
             bug_linked = False
             pr_bug_id = None
             bug_description = None
-            bug_description_line_count = None
+            bug_description_word_count = None
             bug_reopened = None
         return PullRequestLight(category=_dict.get("category"),
                                 timestamp=datetime.fromtimestamp(_dict.get("timestamp")),
@@ -69,10 +69,10 @@ class PullRequestLightMapper:
                                 processingTime=processing_time,
                                 approvedBy=approved_by,
                                 approvedTime=approved_time,
-                                commitLineCount=commit_line_count,
+                                commitWordCount=commit_word_count,
                                 bugLinked=bug_linked,
                                 bugId=pr_bug_id,
                                 bugDescription=bug_description,
-                                bugDescriptionLineCount=bug_description_line_count,
+                                bugDescriptionWordCount=bug_description_word_count,
                                 iterationCount=len(patchSets),
                                 bugReopened=bug_reopened)

@@ -33,11 +33,11 @@ class PRStatistics:
             return '>= 3'
 
     @staticmethod
-    def pr_category(pr: PullRequestLight, required_line_count: int = 2,
-                    required_bug_description_line_count: int = 2) -> str:
-        bug_description_line_count = pr.bugDescriptionLineCount or 0
-        match (pr.bugLinked, pr.commitLineCount >= required_line_count,
-               bug_description_line_count >= required_bug_description_line_count):
+    def pr_category(pr: PullRequestLight, required_word_count: int = 30,
+                    required_bug_description_word_count: int = 30) -> str:
+        bug_description_word_count = pr.bugDescriptionWordCount or 0
+        match (pr.bugLinked, pr.commitWordCount >= required_word_count,
+               bug_description_word_count >= required_bug_description_word_count):
             case (False, False, _):  # 🔗❌ | 💬❌ | 🐞❌
                 return 'Insufficient context'
             case (False, True, _):  # 🔗❌ | 💬✅ | 🐞❌
@@ -56,13 +56,13 @@ class PRStatistics:
         else:
             return 'Not abandoned'
 
-    def calculate_statistics(self):
+    def calculate_statistics(self, **kwargs):
         return [
             {
                 'PR': pr.number,
                 'Review time': self.review_time(pr),
                 'Review iteration': self.review_iteration(pr),
-                'PR category': self.pr_category(pr),
+                'PR category': self.pr_category(pr, **kwargs),
                 'Abandoned PR': self.abandoned_pr(pr)
             }
             for pr in self._pull_requests
