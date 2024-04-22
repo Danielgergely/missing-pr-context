@@ -5,10 +5,13 @@ from datetime import datetime
 class UserMapper:
 
     @staticmethod
-    def dict_to_model(_dict: dict) -> User:
-        return User(email=_dict.get("email"),
-                    name=_dict.get("name"),
-                    username=_dict.get("username"))
+    def dict_to_model(_dict: dict) -> User | None:
+        if _dict is not None:
+            return User(email=_dict.get("email"),
+                        name=_dict.get("name"),
+                        username=_dict.get("username"))
+        else:
+            return None
 
 
 class MessageMapper:

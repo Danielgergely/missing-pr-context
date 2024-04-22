@@ -9,7 +9,7 @@ from visualizer import Visualizer
 
 def read_qt_bots(qt_bots_file_path: str):
     f_reader = service_provider.file_reader()
-    return [f_reader.read_txt(qt_bots_file_path).split("\n")]
+    return f_reader.read_txt(qt_bots_file_path).split("\n")
 
 
 def read_bug_data(bug_data_file_path: str, bug_data_pickle_path: str, full_load: bool = True):
@@ -67,7 +67,7 @@ if __name__ == '__main__':
     statistics = calculate_statistics(pull_requests=pull_requests)
 
     visualizer = Visualizer(data=statistics)
-    visualizer.create_subplots(
+    visualizer.create_barplots(
         x_values=[("Review time", "PR category"), ("Review iteration", "PR category"), ("Abandoned PR", "PR category")],
         title="Pull Request statistics")
 
@@ -94,8 +94,8 @@ if __name__ == '__main__':
     # Eclipse data -> csv ❔
     # Bug reopen -> transitions ❔
 
-    # number of words + 30 -> dynamic
-    # review comments count
-    # bug id duplicated -> reopened
+    # number of words + 30 -> dynamic ✅
+    # review comments count ✅
+    # bug id duplicated -> reopened ❔
     # normalize data before visualization
     # come up with meaningful visualizations -> boxplots

@@ -1,7 +1,5 @@
 from dataclasses import dataclass
 
-import datetime
-
 
 @dataclass
 class User:
@@ -11,7 +9,8 @@ class User:
 
 
 @dataclass
-class Message:
+class Comment:
+    file: str
+    line: int
     message: str
-    reviewer: User | None
-    timestamp: datetime.datetime
+    reviewer: User

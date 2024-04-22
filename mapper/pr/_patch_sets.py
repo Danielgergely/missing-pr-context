@@ -1,3 +1,4 @@
+from mapper.pr import CommentMapper
 from models.pr import PatchSet, User
 from mapper.pr._approval import ApprovalMapper
 from datetime import datetime
@@ -26,4 +27,5 @@ class PatchSetMapper:
                         revision=_dict.get("revision"),
                         sizeDeletions=_dict.get("sizeDeletions"),
                         sizeInsertions=_dict.get("sizeInsertions"),
-                        uploader=UserMapper.dict_to_model(_dict.get("uploader")))
+                        uploader=UserMapper.dict_to_model(_dict.get("uploader")),
+                        comments=[CommentMapper.dict_to_model(comment) for comment in _dict.get("comments", [])])

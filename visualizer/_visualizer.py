@@ -10,7 +10,7 @@ class Visualizer:
     def __init__(self, data: pd.DataFrame):
         self._data = data
 
-    def create_subplots(self, x_values: list[tuple], sub_titles: list[tuple] | None = None,
+    def create_barplots(self, x_values: list[tuple], sub_titles: list[tuple] | None = None,
                         title: str = "Subplots for each category"):
         if sub_titles is None:
             sub_titles = x_values

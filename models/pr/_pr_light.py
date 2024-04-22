@@ -38,3 +38,5 @@ class PullRequestLight:
     bugDescriptionWordCount: int | None
     iterationCount: int
     bugReopened: bool | None
+    commentCount: int | None
+    reviewCommentCount: int | None
