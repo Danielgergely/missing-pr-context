@@ -34,6 +34,8 @@ class Visualizer:
 
         fig.update_layout(height=400 * len(x_values), width=800, title_text=title,
                           legend_tracegroupgap=340)
+        fig.update_xaxes(title_text="Categories")
+        fig.update_yaxes(title_text="Counts")
         fig.show()
 
     def create_boxplots(self, x_values: list[tuple], sub_titles: list[tuple] | None = None,
@@ -53,9 +55,12 @@ class Visualizer:
                     go.Box(y=data.value_counts(),
                            name=f'{x[1]}: {category}',
                            marker_color=color_map[category],
-                           showlegend=False),
+                           showlegend=False,
+                           boxpoints=False),
                     row=i, col=1,
                 )
 
-        fig.update_layout(height=400 * len(x_values), width=800, title_text=title)
+        fig.update_layout(height=500 * len(x_values), width=800, title_text=title)
+        fig.update_xaxes(title_text="Categories")
+        fig.update_yaxes(title_text="Counts")
         fig.show()

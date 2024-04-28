@@ -117,6 +117,6 @@ if __name__ == '__main__':
     ## 2024.04.22
     # Abandoned/not abandoned -> use barchart
     # Implement new version according to concept
-    # Add y & x-axis titles
+    # Add y & x-axis titles ✅
     # Statistical methods
     # Start preparing presentation -> !!answer all questions in email!!
