@@ -65,8 +65,8 @@ class Visualizer:
         fig.update_yaxes(title_text="Counts")
         fig.show()
 
-    def create_combined_plot(self, main_categories: list, sub_categories: list[tuple[str, str]],
-                             title: str = "Combined charts"):
+    def create_combined_plot(self, main_categories: list, sub_categories: list[tuple[str, str, str]],
+                             title: str = "Combined charts", threshold: int = 0.95):
 
         # original_data = self._data.copy()
 
@@ -75,22 +75,27 @@ class Visualizer:
 
         for i, main_category in enumerate(main_categories):
             chart_data = self._data[self._data["PR category"] == main_category]
+
             color_map = {category: color for category, color in zip(sub_categories, px.colors.qualitative.Plotly)}
             for j, sub_category in enumerate(sub_categories):
                 if sub_category[1] == "bar":
                     fig.add_trace(self.getBarPlot(data=chart_data[sub_category[0]].value_counts(),
                                                   title=f"{sub_category[0]}",
                                                   color=color_map[sub_category],
-                                                  show_legend=False,
-                                                  legendgroup=(i + 1)),
+                                                  show_legend=False),
                                   row=(i + 1), col=(j + 1))
                 elif sub_category[1] == "box":
-                    fig.add_trace(self.getBoxPlot(data=chart_data[sub_category[0]].value_counts(),
+                    print(chart_data[sub_category[0]].max())
+                    t = chart_data[sub_category[0]].quantile(threshold)
+                    print(t)
+                    filtered_chart_data = chart_data[chart_data[sub_category[0]] <= t]
+                    fig.add_trace(self.getBoxPlot(data=filtered_chart_data[sub_category[0]],
                                                   title=f"{sub_category[0]}",
                                                   color=color_map[sub_category],
-                                                  show_legend=False,
-                                                  legendgroup=(i + 1)),
+                                                  show_legend=False),
                                   row=(i + 1), col=(j + 1))
+
+                fig.update_yaxes(title_text=f"{sub_category[2]}", row=(i + 1), col=(j + 1))
 
             fig.add_annotation(
                 dict(
@@ -138,22 +143,18 @@ class Visualizer:
         #     ]
         # )
 
-        fig.update_layout(title_text=title)
-        # fig.update_xaxes(title_text="Categories")
-        fig.update_yaxes(title_text="Count")
+        fig.update_layout(title_text=f"{title} - {threshold * 100}% threshold")
         fig.show()
 
-    def getBarPlot(self, data, title, show_legend, color, legendgroup):
+    def getBarPlot(self, data, title, show_legend, color):
         return go.Bar(x=data.index,
                       y=data.values,
                       name=title,
                       showlegend=show_legend,
-                      legendgroup=legendgroup,
                       marker_color=color)
 
-    def getBoxPlot(self, data, title, show_legend, color, legendgroup):
+    def getBoxPlot(self, data, title, show_legend, color):
         return go.Box(y=data,
                       name=title,
                       showlegend=show_legend,
-                      marker_color=color,
-                      legendgroup=legendgroup)
+                      marker_color=color)

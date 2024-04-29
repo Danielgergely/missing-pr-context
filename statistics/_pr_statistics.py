@@ -33,14 +33,14 @@ class PRStatistics:
         #         return "100+"
 
     @staticmethod
-    def review_time(pr: PullRequestLight) -> int:
+    def review_time(pr: PullRequestLight) -> int: # in days
         # if pr.processingTime is None:
         #     return 'N/A'
         # if pr.processingTime < (24 * 3):
         #     return '< 3 days'
         # else:
         #     return '>= 3 days'
-        return pr.processingTime
+        return 0 if pr.processingTime is None else int(pr.processingTime / 24)
 
     @staticmethod
     def review_iteration(pr: PullRequestLight) -> int:

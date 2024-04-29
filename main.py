@@ -48,10 +48,10 @@ def visualize(data: pd.DataFrame, x_values: list,
               title: str = "Pull Request statistics", barplot: bool = True):
     visualizer = Visualizer(data=data)
     main_categories = ["Missing linkage", "Insufficient context", "Proper context"]
-    sub_category = [("Comment count", "box"),
-                    ("Review time", "box"),
-                    ("Review iteration", "box"),
-                    ("Abandoned PR", "bar")]
+    sub_category = [("Comment count", "box", "Count"),
+                    ("Review time", "box", "Days"),
+                    ("Review iteration", "box", "Count"),
+                    ("Abandoned PR", "bar", "")]
     visualizer.create_combined_plot(main_categories=main_categories,
                                     sub_categories=sub_category,
                                     title=title)
@@ -115,8 +115,13 @@ if __name__ == '__main__':
     # come up with meaningful visualizations -> boxplots -> concept created ✅
 
     ## 2024.04.22
-    # Abandoned/not abandoned -> use barchart
-    # Implement new version according to concept
+    # Abandoned/not abandoned -> use barchart ✅
+    # Implement new version according to concept ✅
     # Add y & x-axis titles ✅
+
+
+    ## 2024.04.29
+    # remove outliers
+    # same y-axis for all subplots
     # Statistical methods
     # Start preparing presentation -> !!answer all questions in email!!
