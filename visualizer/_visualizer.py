@@ -67,7 +67,11 @@ class Visualizer:
 
     def create_combined_plot(self, main_categories: list, sub_categories: list[tuple[str, str]],
                              title: str = "Combined charts"):
-        fig = sp.make_subplots(rows=len(main_categories), cols=len(sub_categories), subplot_titles=main_categories)
+
+        # original_data = self._data.copy()
+
+        subplot_titles = [" " for _ in range(len(main_categories) * len(sub_categories))]
+        fig = sp.make_subplots(rows=len(main_categories), cols=len(sub_categories), subplot_titles=subplot_titles)
 
         for i, main_category in enumerate(main_categories):
             chart_data = self._data[self._data["PR category"] == main_category]
@@ -88,17 +92,55 @@ class Visualizer:
                                                   legendgroup=(i + 1)),
                                   row=(i + 1), col=(j + 1))
 
-        # missing_linkage = self._data[self._data["PR category"] == "Missing linkage"]
-        # fig.add_trace(go.Box(y=missing_linkage["Comment count"].value_counts(),
-        #                      name="Comment count",
-        #                      showlegend=True,
-        #                      ),
-        #               row=1, col=1)
+            fig.add_annotation(
+                dict(
+                    x=0.5,
+                    y=1 - (1 / len(main_categories) * i) + 0.05 - (0.05 * i),
+                    showarrow=False,
+                    text=f"{main_category} - {len(chart_data)} ({len(chart_data) / len(self._data) * 100:.2f}%)",
+                    xref="paper",
+                    yref="paper",
+                    font=dict(size=18, color="black"),
+                )
+            )
 
-        fig.update_layout(height=500 * len(main_categories), width=300 * len(sub_categories), title_text=title,
-                          legend_tracegroupgap=340)
-        fig.update_xaxes(title_text="Categories")
-        fig.update_yaxes(title_text="Counts")
+        # filtering
+        # fig.update_layout(
+        #     updatemenus=[
+        #         dict(
+        #             buttons=list([
+        #                 dict(
+        #                     args=[{'y': [original_data['Abandoned PR'].value_counts().values]}],
+        #                     label='All',
+        #                     method='restyle'
+        #                 ),
+        #                 dict(
+        #                     args=[{'y': [original_data[original_data['Abandoned PR'] == 'No'][
+        #                                      'Abandoned PR'].value_counts().values]}],
+        #                     label='Not Abandoned',
+        #                     method='restyle'
+        #                 ),
+        #                 dict(
+        #                     args=[{'y': [original_data[original_data['Abandoned PR'] == 'Yes'][
+        #                                      'Abandoned PR'].value_counts().values]}],
+        #                     label='Abandoned',
+        #                     method='restyle'
+        #                 )
+        #             ]),
+        #             direction='down',
+        #             pad={'r': 10, 't': 10},
+        #             showactive=True,
+        #             x=0.1,
+        #             xanchor='left',
+        #             y=1.1,
+        #             yanchor='top'
+        #         ),
+        #     ]
+        # )
+
+        fig.update_layout(title_text=title)
+        # fig.update_xaxes(title_text="Categories")
+        fig.update_yaxes(title_text="Count")
         fig.show()
 
     def getBarPlot(self, data, title, show_legend, color, legendgroup):

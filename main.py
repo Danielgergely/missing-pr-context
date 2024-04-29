@@ -55,14 +55,6 @@ def visualize(data: pd.DataFrame, x_values: list,
     visualizer.create_combined_plot(main_categories=main_categories,
                                     sub_categories=sub_category,
                                     title=title)
-    if barplot:
-        visualizer.create_barplots(
-            x_values=x_values,
-            title=title)
-    else:
-        visualizer.create_boxplots(
-            x_values=x_values,
-            title=title)
 
 
 if __name__ == '__main__':
