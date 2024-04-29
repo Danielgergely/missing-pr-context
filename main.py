@@ -121,7 +121,7 @@ if __name__ == '__main__':
 
 
     ## 2024.04.29
-    # remove outliers
-    # same y-axis for all subplots
+    # remove outliers ✅
+    # same y-axis for all subplots ✅
     # Statistical methods
     # Start preparing presentation -> !!answer all questions in email!!

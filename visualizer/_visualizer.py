@@ -68,7 +68,15 @@ class Visualizer:
     def create_combined_plot(self, main_categories: list, sub_categories: list[tuple[str, str, str]],
                              title: str = "Combined charts", threshold: int = 0.95):
 
-        # original_data = self._data.copy()
+        global_maxs = {}
+
+        for main_category in main_categories:
+            filtered_data = self._data[self._data["PR category"] == main_category]
+            for sub_category in sub_categories:
+                if sub_category[1] == "box":
+                    t = filtered_data[sub_category[0]].quantile(threshold)
+                    filtered_chart_data = filtered_data[filtered_data[sub_category[0]] <= t]
+                    global_maxs[sub_category[0]] = round(filtered_chart_data[sub_category[0]].max() * 1.15)
 
         subplot_titles = [" " for _ in range(len(main_categories) * len(sub_categories))]
         fig = sp.make_subplots(rows=len(main_categories), cols=len(sub_categories), subplot_titles=subplot_titles)
@@ -85,15 +93,15 @@ class Visualizer:
                                                   show_legend=False),
                                   row=(i + 1), col=(j + 1))
                 elif sub_category[1] == "box":
-                    print(chart_data[sub_category[0]].max())
                     t = chart_data[sub_category[0]].quantile(threshold)
-                    print(t)
                     filtered_chart_data = chart_data[chart_data[sub_category[0]] <= t]
                     fig.add_trace(self.getBoxPlot(data=filtered_chart_data[sub_category[0]],
                                                   title=f"{sub_category[0]}",
                                                   color=color_map[sub_category],
                                                   show_legend=False),
                                   row=(i + 1), col=(j + 1))
+                    fig.update_yaxes(range=[None, global_maxs[sub_category[0]]], row=(i + 1),
+                                     col=(j + 1))
 
                 fig.update_yaxes(title_text=f"{sub_category[2]}", row=(i + 1), col=(j + 1))
 
@@ -109,40 +117,6 @@ class Visualizer:
                 )
             )
 
-        # filtering
-        # fig.update_layout(
-        #     updatemenus=[
-        #         dict(
-        #             buttons=list([
-        #                 dict(
-        #                     args=[{'y': [original_data['Abandoned PR'].value_counts().values]}],
-        #                     label='All',
-        #                     method='restyle'
-        #                 ),
-        #                 dict(
-        #                     args=[{'y': [original_data[original_data['Abandoned PR'] == 'No'][
-        #                                      'Abandoned PR'].value_counts().values]}],
-        #                     label='Not Abandoned',
-        #                     method='restyle'
-        #                 ),
-        #                 dict(
-        #                     args=[{'y': [original_data[original_data['Abandoned PR'] == 'Yes'][
-        #                                      'Abandoned PR'].value_counts().values]}],
-        #                     label='Abandoned',
-        #                     method='restyle'
-        #                 )
-        #             ]),
-        #             direction='down',
-        #             pad={'r': 10, 't': 10},
-        #             showactive=True,
-        #             x=0.1,
-        #             xanchor='left',
-        #             y=1.1,
-        #             yanchor='top'
-        #         ),
-        #     ]
-        # )
-
         fig.update_layout(title_text=f"{title} - {threshold * 100}% threshold")
         fig.show()
 
@@ -157,4 +131,5 @@ class Visualizer:
         return go.Box(y=data,
                       name=title,
                       showlegend=show_legend,
-                      marker_color=color)
+                      marker_color=color,
+                      boxpoints=False)
