@@ -66,7 +66,7 @@ class Visualizer:
         fig.show()
 
     def create_combined_plot(self, main_categories: list, sub_categories: list[tuple[str, str, str]],
-                             title: str = "Combined charts", threshold: int = 0.95):
+                             title: str = "Combined charts", threshold: int = 0.95, dark_mode: bool = True):
 
         global_maxs = {}
 
@@ -100,7 +100,7 @@ class Visualizer:
                                                   color=color_map[sub_category],
                                                   show_legend=False),
                                   row=(i + 1), col=(j + 1))
-                    fig.update_yaxes(range=[None, global_maxs[sub_category[0]]], row=(i + 1),
+                    fig.update_yaxes(range=[0, global_maxs[sub_category[0]]], row=(i + 1),
                                      col=(j + 1))
 
                 fig.update_yaxes(title_text=f"{sub_category[2]}", row=(i + 1), col=(j + 1))
@@ -113,16 +113,19 @@ class Visualizer:
                     text=f"{main_category} - {len(chart_data)} ({len(chart_data) / len(self._data) * 100:.2f}%)",
                     xref="paper",
                     yref="paper",
-                    font=dict(size=18, color="black"),
+                    font=dict(size=18, color="white" if dark_mode else "black"),
                 )
             )
 
-        fig.update_layout(title_text=f"{title} - {threshold * 100}% threshold")
+        fig.update_layout(title_text=f"{title} - {threshold * 100}% threshold",
+                          template='plotly_dark' if dark_mode else 'plotly')
         fig.show()
 
     def getBarPlot(self, data, title, show_legend, color):
-        return go.Bar(x=data.index,
-                      y=data.values,
+        total = data.sum()
+        percentages = data / total * 100
+        return go.Bar(x=percentages.index,
+                      y=percentages.values,
                       name=title,
                       showlegend=show_legend,
                       marker_color=color)

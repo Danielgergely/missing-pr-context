@@ -51,10 +51,11 @@ def visualize(data: pd.DataFrame, x_values: list,
     sub_category = [("Comment count", "box", "Count"),
                     ("Review time", "box", "Days"),
                     ("Review iteration", "box", "Count"),
-                    ("Abandoned PR", "bar", "")]
+                    ("Abandoned PR", "bar", "%")]
     visualizer.create_combined_plot(main_categories=main_categories,
                                     sub_categories=sub_category,
-                                    title=title)
+                                    title=title,
+                                    dark_mode=True)
 
 
 if __name__ == '__main__':
