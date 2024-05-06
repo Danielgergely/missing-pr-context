@@ -126,6 +126,8 @@ class Visualizer:
         percentages = data / total * 100
         return go.Bar(x=percentages.index,
                       y=percentages.values,
+                      text=[f'{p:.2f}%' for p in percentages.values],
+                      textposition='auto',
                       name=title,
                       showlegend=show_legend,
                       marker_color=color)
