@@ -3,8 +3,6 @@ from mapper.pr import PullRequestLightMapper
 import pandas as pd
 from models.pr import PullRequestLight
 from service import service_provider
-from statistics import PRStatistics
-from visualizer import Visualizer
 
 
 def read_qt_bots(qt_bots_file_path: str):
@@ -36,9 +34,13 @@ def read_pr_data(pr_data_file_path: str, pr_data_pickle_path: str, bugs: dict, q
         f_reader.data_to_pickle(pr_data_pickle_path, pull_requests)
         return pull_requests
 
+def evaluate_model(pull_requests: [PullRequestLight], columns_to_compare: [tuple]):
+    evaluator = service_provider.evaluator(data=pull_requests, columns_to_compare=columns_to_compare)
+    raise NotImplemented
+
 
 def calculate_statistics(pull_requests: [PullRequestLight]):
-    pr_statistics = PRStatistics(pull_requests=pull_requests)
+    pr_statistics = service_provider.pr_statistics(pull_requests=pull_requests)
     print(f"% of Pull Request with linked bugs: {pr_statistics.percentage_of_prs_with_bugs():.2f}%")
     statistics = pr_statistics.calculate_statistics()
     return pd.DataFrame(statistics)
@@ -46,7 +48,7 @@ def calculate_statistics(pull_requests: [PullRequestLight]):
 
 def visualize(data: pd.DataFrame, x_values: list,
               title: str = "Pull Request statistics", barplot: bool = True):
-    visualizer = Visualizer(data=data)
+    visualizer = service_provider.visualizer(data=data)
     main_categories = ["Missing linkage", "Insufficient context", "Proper context"]
     sub_category = [("Comment count", "box", "Count"),
                     ("Review time", "box", "Days"),
@@ -125,4 +127,4 @@ if __name__ == '__main__':
     # remove outliers ✅
     # same y-axis for all subplots ✅
     # Statistical methods
-    # Start preparing presentation -> !!answer all questions in email!!
+    # Start preparing presentation -> !!answer all questions in email!! ✅
