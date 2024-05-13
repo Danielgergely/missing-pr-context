@@ -46,10 +46,12 @@ def evaluate_model(data: pd.DataFrame, columns_to_compare: [tuple]):
     evaluator = service_provider.evaluator(data=data, columns_to_compare=columns_to_compare)
     mannwhitneyu = evaluator.mann_whitney_u_test()
     chi_squared = evaluator.chi_squared_test()
+    return {'mannwhitneyu': mannwhitneyu,
+            'chi_squared': chi_squared}
 
 
 def visualize(data: pd.DataFrame, x_values: list,
-              title: str = "Pull Request statistics", barplot: bool = True):
+              title: str = "Pull Request statistics", barplot: bool = True, evaluation_metrics: dict = None):
     visualizer = service_provider.visualizer(data=data)
     main_categories = ["Missing linkage", "Insufficient context", "Proper context"]
     sub_category = [("Comment count", "box", "Count"),
@@ -59,7 +61,8 @@ def visualize(data: pd.DataFrame, x_values: list,
     visualizer.create_combined_plot(main_categories=main_categories,
                                     sub_categories=sub_category,
                                     title=title,
-                                    dark_mode=True)
+                                    dark_mode=True,
+                                    evaluation_metrics=evaluation_metrics)
 
 
 if __name__ == '__main__':
@@ -85,14 +88,16 @@ if __name__ == '__main__':
     statistics = calculate_statistics(pull_requests=pull_requests)
 
     evaluation_metrics = evaluate_model(data=statistics, columns_to_compare=[("Review time", "Review iteration"),
-                                                        ("Review time", "Comment count"),
-                                                        ("Review iteration", "Comment count")])
+                                                                                    ("Review time", "Comment count"),
+                                                                                    ("Review iteration",
+                                                                                     "Comment count")])
 
     visualize(data=statistics, x_values=[("Review time", "PR category"),
                                          ("Review iteration", "PR category"),
                                          ("Abandoned PR", "PR category"),
                                          ("Comment count", "PR category")],
-              barplot=False)
+              barplot=False,
+              evaluation_metrics=evaluation_metrics)
 
     a = 10
 

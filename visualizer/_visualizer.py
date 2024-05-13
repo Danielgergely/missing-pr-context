@@ -66,7 +66,8 @@ class Visualizer:
         fig.show()
 
     def create_combined_plot(self, main_categories: list, sub_categories: list[tuple[str, str, str]],
-                             title: str = "Combined charts", threshold: int = 0.95, dark_mode: bool = True):
+                             title: str = "Combined charts", threshold: int = 0.95, dark_mode: bool = True,
+                             evaluation_metrics: dict | None = None):
 
         global_maxs = {}
 
@@ -115,6 +116,62 @@ class Visualizer:
                     yref="paper",
                     font=dict(size=18, color="white" if dark_mode else "black"),
                 )
+            )
+        # evaluation metrics
+        if evaluation_metrics is not None:
+            stats_dict = {}
+            for stat_type, metrics in evaluation_metrics.items():
+                for metric, value in metrics.items():
+                    key = f"{metric[0]} x {metric[1]}"
+                    if key not in stats_dict:
+                        stats_dict[key] = {}
+                    stats_dict[key][stat_type] = f"{value:.2f}"
+
+            evaluation_stats = [
+                f"{k}-> {list(v.items())[0][0]}: {list(v.items())[0][1]} | {list(v.items())[1][0]}; {list(v.items())[1][1]}"
+                for k, v in stats_dict.items()]
+
+            annotation_text = "<br>".join(evaluation_stats)
+            annotation = dict(
+                x=0.5, y=1,
+                xref="paper", yref="paper",
+                text=annotation_text,
+                showarrow=False,
+                align="center",
+                bgcolor="#111111",
+                bordercolor="#636EFA",
+                font=dict(size=24, color="#636EFA"),
+            )
+
+            num_annotations = len(fig.layout.annotations)
+            annotation['visible'] = False
+            fig.add_annotation(annotation)
+
+            # Add a button to the layout to control the visibility of the annotation
+            fig.update_layout(
+                updatemenus=[
+                    dict(
+                        type="buttons",
+                        direction="right",
+                        active=0,
+                        x=0.57,
+                        y=1.2,
+                        bgcolor="#111111",
+                        borderwidth=2,
+                        bordercolor="#636EFA",
+                        font=dict(color="#636EFA"),
+                        buttons=list([
+                            dict(label="Show Metrics",
+                                 method="relayout",
+                                 args=[f"annotations[{num_annotations}].visible", True]
+                                 ),
+                            dict(label="Hide Metrics",
+                                 method="relayout",
+                                 args=[f"annotations[{num_annotations}].visible", False]
+                                 ),
+                        ]),
+                    )
+                ]
             )
 
         fig.update_layout(title_text=f"{title} - {threshold * 100}% threshold",
