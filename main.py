@@ -88,9 +88,9 @@ if __name__ == '__main__':
     statistics = calculate_statistics(pull_requests=pull_requests)
 
     evaluation_metrics = evaluate_model(data=statistics, columns_to_compare=[("Review time", "Review iteration"),
-                                                                                    ("Review time", "Comment count"),
-                                                                                    ("Review iteration",
-                                                                                     "Comment count")])
+                                                                             ("Review time", "Comment count"),
+                                                                             ("Review iteration",
+                                                                              "Comment count")])
 
     visualize(data=statistics, x_values=[("Review time", "PR category"),
                                          ("Review iteration", "PR category"),
@@ -98,43 +98,3 @@ if __name__ == '__main__':
                                          ("Comment count", "PR category")],
               barplot=False,
               evaluation_metrics=evaluation_metrics)
-
-    a = 10
-
-    # QT
-    # PR 5 -> QTBUG-85700 (Task number:) -> https://codereview.qt-project.org/c/qt/qtbase/+/285578
-    # PR 7 -> QTBUG-86969 (Task number:) -> https://codereview.qt-project.org/c/qt/qtbase/+/315655
-    # PR 18 -> QTBUG-86133 (Task number:) -> https://codereview.qt-project.org/c/qt/qtbase/+/314853
-
-    # Eclipse
-    # -> bug data is not exported completely. the data column only contains a small portion of the actual information
-
-    # Bug reopen -> transitions ❌
-    ## bug data does not contain transition data. Transitions is always an empty list -> 'QTBUG-23917'
-    # multiple PR for 1 bug ✅
-    # iteration count-> patch sets number of commits after review ✅
-    ## https://codereview.qt-project.org/c/qt/qtbase/+/311411 -> 104 iterationCount = 4
-    ## user revision hash -> unique number of hashes
-    # List all PR statuses ✅
-    # useful statistics -> % of pr to bugs ✅ -> iteration < 3 > 3 ✅ -> time + 2 day -2 days ✅
-
-    ## 2024.04.08
-    # Eclipse data -> csv ❔
-    # Bug reopen -> transitions ❔
-
-    # number of words + 30 -> dynamic ✅
-    # review comments count ✅
-    # bug id duplicated -> reopened ❔
-    # normalize data before visualization ❔-> is it necessary if concept is ok
-    # come up with meaningful visualizations -> boxplots -> concept created ✅
-
-    ## 2024.04.22
-    # Abandoned/not abandoned -> use barchart ✅
-    # Implement new version according to concept ✅
-    # Add y & x-axis titles ✅
-
-    ## 2024.04.29
-    # remove outliers ✅
-    # same y-axis for all subplots ✅
-    # Statistical methods
-    # Start preparing presentation -> !!answer all questions in email!! ✅
