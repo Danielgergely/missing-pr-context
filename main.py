@@ -34,16 +34,18 @@ def read_pr_data(pr_data_file_path: str, pr_data_pickle_path: str, bugs: dict, q
         f_reader.data_to_pickle(pr_data_pickle_path, pull_requests)
         return pull_requests
 
-def evaluate_model(pull_requests: [PullRequestLight], columns_to_compare: [tuple]):
-    evaluator = service_provider.evaluator(data=pull_requests, columns_to_compare=columns_to_compare)
-    raise NotImplemented
 
-
-def calculate_statistics(pull_requests: [PullRequestLight]):
+def calculate_statistics(pull_requests: [PullRequestLight]) -> pd.DataFrame:
     pr_statistics = service_provider.pr_statistics(pull_requests=pull_requests)
     print(f"% of Pull Request with linked bugs: {pr_statistics.percentage_of_prs_with_bugs():.2f}%")
     statistics = pr_statistics.calculate_statistics()
     return pd.DataFrame(statistics)
+
+
+def evaluate_model(data: pd.DataFrame, columns_to_compare: [tuple]):
+    evaluator = service_provider.evaluator(data=data, columns_to_compare=columns_to_compare)
+    mannwhitneyu = evaluator.mann_whitney_u_test()
+    chi_squared = evaluator.chi_squared_test()
 
 
 def visualize(data: pd.DataFrame, x_values: list,
@@ -81,6 +83,10 @@ if __name__ == '__main__':
         f_reader.data_to_pickle("qt_bugs.pickle", bugs)
 
     statistics = calculate_statistics(pull_requests=pull_requests)
+
+    evaluation_metrics = evaluate_model(data=statistics, columns_to_compare=[("Review time", "Review iteration"),
+                                                        ("Review time", "Comment count"),
+                                                        ("Review iteration", "Comment count")])
 
     visualize(data=statistics, x_values=[("Review time", "PR category"),
                                          ("Review iteration", "PR category"),
@@ -121,7 +127,6 @@ if __name__ == '__main__':
     # Abandoned/not abandoned -> use barchart ✅
     # Implement new version according to concept ✅
     # Add y & x-axis titles ✅
-
 
     ## 2024.04.29
     # remove outliers ✅

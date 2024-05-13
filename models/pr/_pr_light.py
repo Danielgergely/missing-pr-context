@@ -40,3 +40,31 @@ class PullRequestLight:
     bugReopened: bool | None
     commentCount: int | None
     reviewCommentCount: int | None
+
+    def to_dict(self):
+        return {
+            "category": self.category,
+            "timestamp": self.timestamp.timestamp(),
+            "updated_on": self.updated_on.timestamp(),
+            "created_on": self.created_on.timestamp(),
+            "commitMessage": self.commitMessage,
+            "lastUpdated": self.lastUpdated.timestamp(),
+            "number": self.number,
+            "open": self.open,
+            "owner": self.owner.to_dict(),
+            "project": self.project,
+            "status": self.status.value,
+            "subject": self.subject,
+            "processingTime": self.processingTime,
+            # "approvedBy": self.approvedBy.to_dict() if self.approvedBy else None,
+            "approvedTime": self.approvedTime.timestamp() if self.approvedTime else None,
+            "commitWordCount": self.commitWordCount,
+            "bugLinked": self.bugLinked,
+            "bugId": self.bugId,
+            "bugDescription": self.bugDescription,
+            "bugDescriptionWordCount": self.bugDescriptionWordCount,
+            "iterationCount": self.iterationCount,
+            "bugReopened": self.bugReopened,
+            "commentCount": self.commentCount,
+            "reviewCommentCount": self.reviewCommentCount
+        }

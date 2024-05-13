@@ -23,7 +23,7 @@ class ServiceProvider:
     def visualizer(self, data: pd.DataFrame) -> Visualizer:
         return Visualizer(data=data)
 
-    def evaluator(self, data: [PullRequestLight], columns_to_compare: [tuple]) -> Evaluator:
+    def evaluator(self, data: pd.DataFrame, columns_to_compare: [tuple]) -> Evaluator:
         return Evaluator(data=data, columns_to_compare=columns_to_compare)
 
 

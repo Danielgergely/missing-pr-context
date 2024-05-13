@@ -5,18 +5,24 @@ import scipy
 
 
 class Evaluator:
-    _data: [PullRequestLight]
+    _data: pd.DataFrame
     _columns_to_compare: [tuple]
-    _stats_df: pd.DataFrame
 
-    def __init__(self, data: [PullRequestLight], columns_to_compare: [tuple]):
+    def __init__(self, data: pd.DataFrame, columns_to_compare: [tuple]):
         self._data = data
         self._columns_to_compare = columns_to_compare
-        self._stats_df = pd.DataFrame([pr.to_dict() for pr in data])
 
     def mann_whitney_u_test(self):
         for column_pair in self._columns_to_compare:
-            x = pd.Series(self._stats_df[column_pair[0]])
-            y = pd.Series(self._stats_df[column_pair[1]])
+            x = pd.Series(self._data[column_pair[0]])
+            y = pd.Series(self._data[column_pair[1]])
             result = scipy.stats.mannwhitneyu(x, y)
-            print(f"Column pair: {column_pair}. Mann-Whitney U test result: {result}")
+            print(f"Column pair: {column_pair}. Mann-Whitney U test result: {result.statistic}")
+
+    def chi_squared_test(self):
+        for column_pair in self._columns_to_compare:
+            x = pd.Series(self._data[column_pair[0]])
+            y = pd.Series(self._data[column_pair[1]])
+            contingency_table = pd.crosstab(x, y)
+            result = scipy.stats.chi2_contingency(contingency_table)
+            print(f"Column pair: {column_pair}. Chi-Square test result: result: {result.statistic}")
